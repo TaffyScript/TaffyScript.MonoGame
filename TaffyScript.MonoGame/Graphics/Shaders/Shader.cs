@@ -4,15 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Graphics;
+using TaffyScript.Collections;
 
-namespace TaffyScript.MonoGame.Sound
+namespace TaffyScript.MonoGame.Graphics
 {
-    public class TsSound : ITsInstance
+    public class Shader : ITsInstance
     {
-        public SoundEffect Source { get; }
+        private TsList _parameters;
+        private TsList _techniques;
+        public Effect Source { get; }
 
-        public string ObjectType => "TaffyScript.MonoGame.Sound.Sound";
+        public string ObjectType => "TaffyScript.MonoGame.Graphics.Shader";
 
         public TsObject this[string memberName]
         {
@@ -20,7 +23,27 @@ namespace TaffyScript.MonoGame.Sound
             set => SetMember(memberName, value);
         }
 
-        public TsSound(SoundEffect source)
+        public TsList Parameters
+        {
+            get
+            {
+                if (_parameters is null)
+                    _parameters = new TsList(Source.Parameters.Select(p => new TsInstanceWrapper(new ShaderParameter(p))));
+                return _parameters;
+            }
+        }
+
+        public TsList Techniques
+        {
+            get
+            {
+                if(_techniques is null)
+                    _techniques = new TsList(Source.Techniques.Select(t => new TsInstanceWrapper(new ShaderTechnique(t))));
+                return _techniques;
+            }
+        }
+
+        public Shader(Effect source)
         {
             Source = source;
         }
@@ -29,12 +52,16 @@ namespace TaffyScript.MonoGame.Sound
         {
             switch(name)
             {
-                case "duration":
-                    return Source.Duration.Milliseconds;
+                case "current_technique":
+                    return new ShaderTechnique(Source.CurrentTechnique);
                 case "is_disposed":
                     return Source.IsDisposed;
                 case "name":
                     return Source.Name;
+                case "parameters":
+                    return Parameters;
+                case "techniques":
+                    return Techniques;
                 default:
                     if (TryGetDelegate(name, out var del))
                         return del;
@@ -46,6 +73,9 @@ namespace TaffyScript.MonoGame.Sound
         {
             switch (name)
             {
+                case "current_technique":
+                    Source.CurrentTechnique = ((ShaderTechnique)value).Source;
+                    break;
                 case "name":
                     Source.Name = (string)value;
                     break;
@@ -58,17 +88,11 @@ namespace TaffyScript.MonoGame.Sound
         {
             switch(delegateName)
             {
-                case "create_instance":
-                    del = new TsDelegate(create_instance, delegateName);
+                case "clone":
+                    del = new TsDelegate(clone, delegateName);
                     return true;
                 case "dispose":
                     del = new TsDelegate(dispose, delegateName);
-                    return true;
-                case "play":
-                    del = new TsDelegate(play, delegateName);
-                    return true;
-                case "play_ext":
-                    del = new TsDelegate(play_ext, delegateName);
                     return true;
                 default:
                     del = null;
@@ -87,27 +111,23 @@ namespace TaffyScript.MonoGame.Sound
         {
             switch (scriptName)
             {
-                case "create_instance":
-                    return create_instance(args);
+                case "clone":
+                    return clone(args);
                 case "dispose":
                     return dispose(args);
-                case "play":
-                    return play(args);
-                case "play_ext":
-                    return play_ext(args);
                 default:
                     throw new MissingMethodException(ObjectType, scriptName);
             }
         }
 
-        private TsObject create_instance(TsObject[] args)
+        private TsObject clone(TsObject[] args)
         {
-            return new TsSoundInstance(Source.CreateInstance());
+            return new Shader(Source.Clone());
         }
 
         private TsObject dispose(TsObject[] args)
         {
-            if (!Source.IsDisposed)
+            if(!Source.IsDisposed)
             {
                 Source.Dispose();
                 return true;
@@ -115,24 +135,14 @@ namespace TaffyScript.MonoGame.Sound
             return false;
         }
 
-        private TsObject play(TsObject[] args)
+        public static implicit operator TsObject(Shader shader)
         {
-            return Source.Play();
+            return new TsInstanceWrapper(shader);
         }
 
-        private TsObject play_ext(TsObject[] args)
+        public static explicit operator Shader(TsObject obj)
         {
-            return Source.Play((float)args[0], (float)args[1], (float)args[2]);
-        }
-
-        public static implicit operator TsObject(TsSound sound)
-        {
-            return new TsInstanceWrapper(sound);
-        }
-
-        public static explicit operator TsSound(TsObject obj)
-        {
-            return (TsSound)obj.WeakValue;
+            return (Shader)obj.WeakValue;
         }
     }
 }

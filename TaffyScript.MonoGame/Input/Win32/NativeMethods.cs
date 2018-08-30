@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if Windows
+
+using System;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -201,3 +203,5 @@ namespace TaffyScript.MonoGame.Input.Win32
         #endregion
     }
 }
+
+#endif

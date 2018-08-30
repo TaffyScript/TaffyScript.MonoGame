@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
+using Microsoft.Xna.Framework;
 using TaffyScript.MonoGame.Collisions;
 
 namespace TaffyScript.MonoGame
@@ -15,6 +16,7 @@ namespace TaffyScript.MonoGame
         private Box _box = new Box(0, 0);
         private SpatialStore _hash = new SpatialStore();
         private HashSet<GameObject> _cache = new HashSet<GameObject>();
+        private HashSet<GameObject> _blank = new HashSet<GameObject>();
 
         public SpatialHash(int cellSize)
         {
@@ -131,6 +133,15 @@ namespace TaffyScript.MonoGame
                         return item;
 
             return default(GameObject);
+        }
+
+        public HashSet<GameObject> Broadphase(ref Vector2 position)
+        {
+            var ex = MathF.FastFloorToInt(position.X * _inverseCellSize);
+            var ey = MathF.FastFloorToInt(position.Y * _inverseCellSize);
+            if (!_hash.TryGetValue(ex, ey, out var set))
+                return _blank;
+            return set;
         }
 
         public HashSet<GameObject> Broadphase(ref RectangleF bounds)

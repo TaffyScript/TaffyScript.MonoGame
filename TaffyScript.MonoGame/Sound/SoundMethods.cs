@@ -8,131 +8,131 @@ using TaffyScript.Collections;
 
 namespace TaffyScript.MonoGame.Sound
 {
-    [WeakBaseType]
+    [TaffyScriptBaseType]
     public static class SoundMethods
     {
         #region Properties
 
-        [WeakMethod]
-        public static TsObject media_game_has_control(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject media_game_has_control(TsObject[] args)
         {
             return MediaPlayer.GameHasControl;
         }
 
-        [WeakMethod]
-        public static TsObject media_get_muted(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject media_get_muted(TsObject[] args)
         {
             return MediaPlayer.IsMuted;
         }
 
-        [WeakMethod]
-        public static TsObject media_set_muted(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject media_set_muted(TsObject[] args)
         {
             MediaPlayer.IsMuted = (bool)args[0];
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        [WeakMethod]
-        public static TsObject media_get_repeating(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject media_get_repeating(TsObject[] args)
         {
             return MediaPlayer.IsRepeating;
         }
 
-        [WeakMethod]
-        public static TsObject media_set_repeating(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject media_set_repeating(TsObject[] args)
         {
             MediaPlayer.IsRepeating = (bool)args[0];
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        [WeakMethod]
-        public static TsObject media_get_shuffled(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject media_get_shuffled(TsObject[] args)
         {
             return MediaPlayer.IsShuffled;
         }
 
-        [WeakMethod]
-        public static TsObject media_set_shuffled(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject media_set_shuffled(TsObject[] args)
         {
             MediaPlayer.IsShuffled = (bool)args[0];
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        [WeakMethod]
-        public static TsObject media_get_visualization_ended(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject media_get_visualization_ended(TsObject[] args)
         {
             return MediaPlayer.IsVisualizationEnabled;
         }
 
-        [WeakMethod]
-        public static TsObject media_get_position(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject media_get_position(TsObject[] args)
         {
             return MediaPlayer.PlayPosition.Milliseconds;
         }
 
-        [WeakMethod]
-        public static TsObject media_get_state(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject media_get_state(TsObject[] args)
         {
             return (float)MediaPlayer.State;
         }
 
-        [WeakMethod]
-        public static TsObject media_get_volume(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject media_get_volume(TsObject[] args)
         {
             return MediaPlayer.Volume;
         }
 
-        [WeakMethod]
-        public static TsObject media_set_volume(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject media_set_volume(TsObject[] args)
         {
             MediaPlayer.Volume = (float)args[0];
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
         #endregion
 
         #region Methods
 
-        [WeakMethod]
-        public static TsObject media_move_next(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject media_move_next(TsObject[] args)
         {
             MediaPlayer.MoveNext();
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        [WeakMethod]
-        public static TsObject media_move_previous(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject media_move_previous(TsObject[] args)
         {
             MediaPlayer.MovePrevious();
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        [WeakMethod]
-        public static TsObject media_pause(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject media_pause(TsObject[] args)
         {
             MediaPlayer.Pause();
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        [WeakMethod]
-        public static TsObject media_play(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject media_play(TsObject[] args)
         {
             MediaPlayer.Play(((TsSong)args[0]).Source);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        [WeakMethod]
-        public static TsObject media_resume(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject media_resume(TsObject[] args)
         {
             MediaPlayer.Resume();
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        [WeakMethod]
-        public static TsObject media_stop(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject media_stop(TsObject[] args)
         {
             MediaPlayer.Stop();
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
         #endregion
@@ -141,8 +141,8 @@ namespace TaffyScript.MonoGame.Sound
 
         private static EventCache<MediaEventType> _cache = new EventCache<MediaEventType>();
 
-        [WeakMethod]
-        public static TsObject media_subscribe(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject media_subscribe(TsObject[] args)
         {
             var type = (MediaEventType)(float)args[0];
             var del = (TsDelegate)args[1];
@@ -157,11 +157,11 @@ namespace TaffyScript.MonoGame.Sound
                 default:
                     throw new ArgumentException("type");
             }
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        [WeakMethod]
-        public static TsObject media_unsubscribe(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject media_unsubscribe(TsObject[] args)
         {
             var type = (MediaEventType)(float)args[0];
             var del = (TsDelegate)args[1];

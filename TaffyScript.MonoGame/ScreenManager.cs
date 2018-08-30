@@ -5,12 +5,13 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Myst.Extensions;
+using TaffyScript.MonoGame.Graphics;
 using TaffyScript.MonoGame.ViewportAdapters;
 using Microsoft.Xna.Framework;
 
 namespace TaffyScript.MonoGame
 {
-    [WeakBaseType]
+    [TaffyScriptBaseType]
     public static class ScreenManager
     {
         private static readonly List<Screen> _screens = new List<Screen>();
@@ -32,11 +33,11 @@ namespace TaffyScript.MonoGame
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [WeakMethod]
-        public static TsObject screen_push(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject screen_push(TsObject[] args)
         {
             PushScreen((Screen)args[0]);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -48,11 +49,11 @@ namespace TaffyScript.MonoGame
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [WeakMethod]
-        public static TsObject screen_change(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject screen_change(TsObject[] args)
         {
             ChangeScreen((Screen)args[0]);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -65,11 +66,11 @@ namespace TaffyScript.MonoGame
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [WeakMethod]
-        public static TsObject screen_pop(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject screen_pop(TsObject[] args)
         {
             PopScreen();
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -79,8 +80,8 @@ namespace TaffyScript.MonoGame
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [WeakMethod]
-        public static TsObject screen_exists(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject screen_exists(TsObject[] args)
         {
             return ContainsScreen((Screen)args[0]);
         }
@@ -93,6 +94,8 @@ namespace TaffyScript.MonoGame
 
         public static void Draw(GameTime gameTime)
         {
+            _game.GraphicsDevice.Clear(SpriteBatchManager.BackgroundColor);
+
             if (_screens.Count > 0)
                 _screens.Peek().Draw();
         }
@@ -108,44 +111,44 @@ namespace TaffyScript.MonoGame
         private static void RemoveScreen()
         {
             _screens.Pop();
-            TsInstance.Global["screen"] = _screens.Count > 0 ? _screens.Peek() : TsObject.Empty();
+            TsInstance.Global["screen"] = _screens.Count > 0 ? _screens.Peek() : TsObject.Empty;
         }
 
-        [WeakMethod]
-        public static TsObject gui_get_width(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject gui_get_width(TsObject[] args)
         {
             return ViewportAdapter.VirtualWidth;
         }
 
-        [WeakMethod]
-        public static TsObject gui_get_height(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject gui_get_height(TsObject[] args)
         {
             return ViewportAdapter.VirtualHeight;
         }
 
-        [WeakMethod]
-        public static TsObject gui_mouse_pos(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject gui_mouse_pos(TsObject[] args)
         {
             return new TsObject[] { Input.InputManager.MousePosition.X, Input.InputManager.MousePosition.Y };
         }
 
-        [WeakMethod]
-        public static TsObject gui_mouse_x(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject gui_mouse_x(TsObject[] args)
         {
             return Input.InputManager.MousePosition.X;
         }
 
-        [WeakMethod]
-        public static TsObject gui_mouse_y(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject gui_mouse_y(TsObject[] args)
         {
             return Input.InputManager.MousePosition.Y;
         }
 
-        [WeakMethod]
-        public static TsObject game_end(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject game_end(TsObject[] args)
         {
             _game.Exit();
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
     }
 }

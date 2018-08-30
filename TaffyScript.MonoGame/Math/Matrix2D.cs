@@ -180,8 +180,8 @@ namespace TaffyScript.MonoGame
         {
             result = Matrix2D.Identity;
 
-            var val1 = (float)Math.Cos(radians);
-            var val2 = (float)Math.Sin(radians);
+            var val1 = (float)System.Math.Cos(radians);
+            var val2 = (float)System.Math.Sin(radians);
 
             result.M11 = val1;
             result.M12 = val2;

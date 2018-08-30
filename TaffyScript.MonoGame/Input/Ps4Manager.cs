@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if Windows
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -69,3 +71,5 @@ namespace TaffyScript.MonoGame.Input
         }
     }
 }
+
+#endif

@@ -1,17 +1,16 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
 using TaffyScript.MonoGame.Collisions;
+using TaffyScript.Reflection;
 
 namespace TaffyScript.MonoGame
 {
     public delegate void PositionChangedDelegate(RectangleF previousPosition, Shape currentPosition);
     public delegate void DepthChangedDelegate(int previousDepth, int currentDepth);
 
-    [WeakObject]
+    [TaffyScriptObject]
     public class GameObject : ITsInstance
     {
         private Shape _collider = new NullCollider();
@@ -89,11 +88,15 @@ namespace TaffyScript.MonoGame
                     var bounds = _collider.BoundingBox;
                     return new TsObject[] { bounds.X, bounds.Y, bounds.Width, bounds.Height };
                 case "screen":
-                    return Screen ?? TsObject.Empty();
+                    return Screen ?? TsObject.Empty;
                 case "depth":
                     return Depth;
                 default:
-                    return _members[name];
+                    if (_members.TryGetValue(name, out var result))
+                        return result;
+                    if (TryGetDelegate(name, out var del))
+                        return del;
+                    throw new MissingMemberException(ObjectType, name);
             }
         }
 
@@ -108,11 +111,11 @@ namespace TaffyScript.MonoGame
                     SetPosition(new Vector2(_collider.Position.X, (float)value));
                     break;
                 case "position":
-                    var array = value.GetArray1D();
+                    var array = value.GetArray();
                     SetPosition(new Vector2((float)array[0], (float)array[1]));
                     break;
                 case "collider":
-                    SetCollider(value.Value.WeakValue as Shape);
+                    SetCollider(value.WeakValue as Shape);
                     break;
                 case "depth":
                     Depth = (int)value;
@@ -130,7 +133,7 @@ namespace TaffyScript.MonoGame
                 default:
                     if (_members.TryGetValue(delegateName, out var member) && member.Type == VariableType.Delegate)
                     {
-                        del = member.GetDelegateUnchecked();
+                        del = member.GetDelegate();
                         return true;
                     }
                     del = null;
@@ -152,6 +155,57 @@ namespace TaffyScript.MonoGame
             _collider = collider ?? new NullCollider();
             _collider.Position = pos;
             PositionChanged?.Invoke(prev, collider);
+        }
+
+        private TsObject collides_with(TsObject[] args)
+        {
+            switch(args.Length)
+            {
+                case 0:
+                    return Screen.CollisionWorld.Any(this);
+                default:
+                    foreach (var item in Screen.CollisionWorld.Broadphase(this).Where(i => Collider.Overlaps(i.Collider)))
+                    {
+                        if (TsReflection.ObjectIs(item.ObjectType, (string)args[0]))
+                            return true;
+                    }
+                    return false;
+            }
+        }
+
+        private TsObject collides_with_place(TsObject[] args)
+        {
+            var pos = Collider.Position;
+            Collider.Position = new Vector2((float)args[0], (float)args[1]);
+            switch (args.Length)
+            {
+                case 2:
+                    var result = Screen.CollisionWorld.Any(this);
+                    Collider.Position = pos;
+                    return result;
+                default:
+                    foreach (var item in Screen.CollisionWorld.Broadphase(this).Where(i => Collider.Overlaps(i.Collider)))
+                    {
+                        if (TsReflection.ObjectIs(item.ObjectType, (string)args[3]))
+                        {
+                            Collider.Position = pos;
+                            return true;
+                        }
+                    }
+                    break;
+            }
+            Collider.Position = pos;
+            return false;
+        }
+
+        public static implicit operator TsObject(GameObject gameObject)
+        {
+            return new TsInstanceWrapper(gameObject);
+        }
+
+        public static explicit operator GameObject(TsObject obj)
+        {
+            return (GameObject)obj.WeakValue;
         }
     }
 }

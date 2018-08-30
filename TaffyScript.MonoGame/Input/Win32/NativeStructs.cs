@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if Windows
+
+using System;
 using System.Runtime.InteropServices;
 
 namespace TaffyScript.MonoGame.Input.Win32
@@ -180,3 +182,5 @@ namespace TaffyScript.MonoGame.Input.Win32
         internal ushort NumberFeatureDataIndices;
     }
 }
+
+#endif

@@ -11,10 +11,12 @@ using TaffyScript.Collections;
 
 namespace TaffyScript.MonoGame.Input
 {
-    [WeakBaseType]
+    [TaffyScriptBaseType]
     public static class InputManager
     {
+#if Windows
         private static int _pollInterval;
+#endif
         private static int _frames = 0;
         private static int _players;
         private static int _actionCount;
@@ -40,8 +42,8 @@ namespace TaffyScript.MonoGame.Input
             return _keyboardCurrent.IsKeyDown(key);
         }
         
-        [WeakMethod]
-        public static TsObject key_check(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject key_check(TsObject[] args)
         {
             return KeyCheck((Keys)(float)args[0]);
         }
@@ -51,8 +53,8 @@ namespace TaffyScript.MonoGame.Input
             return _keyboardCurrent.IsKeyDown(key) && _keyboardPrevious.IsKeyUp(key);
         }
 
-        [WeakMethod]
-        public static TsObject key_check_pressed(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject key_check_pressed(TsObject[] args)
         {
             return KeyCheckPressed((Keys)(float)args[0]);
         }
@@ -62,8 +64,8 @@ namespace TaffyScript.MonoGame.Input
             return _keyboardCurrent.IsKeyUp(key) && _keyboardPrevious.IsKeyDown(key);
         }
 
-        [WeakMethod]
-        public static TsObject key_check_released(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject key_check_released(TsObject[] args)
         {
             return KeyCheckReleased((Keys)(float)args[0]);
         }
@@ -73,8 +75,8 @@ namespace TaffyScript.MonoGame.Input
             return _controllers.Count > index && _controllers[index].CurrentButtonDown(button);
         }
 
-        [WeakMethod]
-        public static TsObject gamepad_check(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject gamepad_check(TsObject[] args)
         {
             return GamepadCheck((Buttons)(float)args[0], args.Length > 1 ? (int)args[1] : 0);
         }
@@ -84,8 +86,8 @@ namespace TaffyScript.MonoGame.Input
             return _controllers.Count > index && _controllers[index].CurrentButtonDown(button) && !_controllers[index].CurrentButtonDown(button);
         }
 
-        [WeakMethod]
-        public static TsObject gamepad_check_pressed(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject gamepad_check_pressed(TsObject[] args)
         {
             return GamepadCheckPressed((Buttons)(float)args[0], args.Length > 1 ? (int)args[1] : 0);
         }
@@ -95,8 +97,8 @@ namespace TaffyScript.MonoGame.Input
             return _controllers.Count > index && !_controllers[index].CurrentButtonDown(button) && _controllers[index].PreviousButtonDown(button);
         }
 
-        [WeakMethod]
-        public static TsObject gamepad_check_released(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject gamepad_check_released(TsObject[] args)
         {
             return GamepadCheckReleased((Buttons)(float)args[0], args.Length > 1 ? (int)args[1] : 0);
         }
@@ -137,8 +139,8 @@ namespace TaffyScript.MonoGame.Input
             return false;
         }
 
-        [WeakMethod]
-        public static TsObject mouse_check(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject mouse_check(TsObject[] args)
         {
             return MouseCheck((MouseButtons)(float)args[0]);
         }
@@ -161,8 +163,8 @@ namespace TaffyScript.MonoGame.Input
             return false;
         }
 
-        [WeakMethod]
-        public static TsObject mouse_check_pressed(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject mouse_check_pressed(TsObject[] args)
         {
             return MouseCheckPressed((MouseButtons)(float)args[0]);
         }
@@ -182,14 +184,14 @@ namespace TaffyScript.MonoGame.Input
             }
         }
 
-        [WeakMethod]
-        public static TsObject mouse_check_released(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject mouse_check_released(TsObject[] args)
         {
             return MouseCheckReleased((MouseButtons)(float)args[0]);
         }
 
-        [WeakMethod]
-        public static TsObject mouse_has_moved(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject mouse_has_moved(TsObject[] args)
         {
             return _mouseCurrent != _mousePrevious;
         }
@@ -199,8 +201,8 @@ namespace TaffyScript.MonoGame.Input
             return _actions[action, player].CurrentPressed;
         }
 
-        [WeakMethod]
-        public static TsObject action_check(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject action_check(TsObject[] args)
         {
             return ActionCheck((int)args[0], args.Length > 1 ? (int)args[1] : 0);
         }
@@ -210,8 +212,8 @@ namespace TaffyScript.MonoGame.Input
             return _actions[action, player].CurrentPressed && !_actions[action, player].PreviousPressed;
         }
 
-        [WeakMethod]
-        public static TsObject action_check_pressed(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject action_check_pressed(TsObject[] args)
         {
             return ActionCheckPressed((int)args[0], args.Length > 1 ? (int)args[1] : 0);
         }
@@ -221,8 +223,8 @@ namespace TaffyScript.MonoGame.Input
             return !_actions[action, player].CurrentPressed && _actions[action, player].PreviousPressed;
         }
 
-        [WeakMethod]
-        public static TsObject action_check_released(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject action_check_released(TsObject[] args)
         {
             return ActionCheckReleased((int)args[0], args.Length > 1 ? (int)args[1] : 0);
         }
@@ -246,6 +248,9 @@ namespace TaffyScript.MonoGame.Input
                 controller.Connected += (s, e) => ControllerConnected(null, (IController)s);
                 controller.Disconnected += (s, e) => ControllerDisconnected(null, (IController)s);
             }
+
+#if Windows
+
             _pollInterval = ps4PollIntervalInFrames;
             if(_pollInterval > 0)
             {
@@ -263,6 +268,8 @@ namespace TaffyScript.MonoGame.Input
                 }, false);
                 _frames = _pollInterval;
             }
+
+#endif
         }
 
         public static void InitializeActions(int actions, int players)
@@ -281,38 +288,38 @@ namespace TaffyScript.MonoGame.Input
                     _actions[a, p] = new ActionMap(0);
         }
 
-        [WeakMethod]
-        public static TsObject input_initialize(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject input_initialize(TsObject[] args)
         {
             InitializeActions((int)args[0], (int)args[1]);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        [WeakMethod]
-        public static TsObject input_get_action(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject input_get_action(TsObject[] args)
         {
             return _actions[(int)args[0], (int)args[1]];
         }
 
-        [WeakMethod]
-        public static TsObject input_set_action(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject input_set_action(TsObject[] args)
         {
             _actions[(int)args[0], (int)args[1]] = (ActionMap)args[2];
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        [WeakMethod]
-        public static TsObject input_controller_connected_add(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject input_controller_connected_add(TsObject[] args)
         {
             var del = (TsDelegate)args[0];
-            EventHandler<IController> handler = (s, e) => del.Invoke(new TsObject(e));
+            EventHandler<IController> handler = (s, e) => del.Invoke(new TsInstanceWrapper(e));
             ControllerConnected += handler;
             _controllerEvents.Cache(true, del, handler);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        [WeakMethod]
-        public static TsObject input_controller_connected_remove(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject input_controller_connected_remove(TsObject[] args)
         {
             var del = (TsDelegate)args[0];
             if (_controllerEvents.TryRemove(true, del, out var handler))
@@ -323,18 +330,18 @@ namespace TaffyScript.MonoGame.Input
             return false;
         }
 
-        [WeakMethod]
-        public static TsObject input_controller_disconnected_add(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject input_controller_disconnected_add(TsObject[] args)
         {
             var del = (TsDelegate)args[0];
-            EventHandler<IController> handler = (s, e) => del.Invoke(new TsObject(e));
+            EventHandler<IController> handler = (s, e) => del.Invoke(new TsInstanceWrapper(e));
             ControllerDisconnected += handler;
             _controllerEvents.Cache(false, del, handler);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        [WeakMethod]
-        public static TsObject input_controller_disconnected_remove(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject input_controller_disconnected_remove(TsObject[] args)
         {
             var del = (TsDelegate)args[0];
             if (_controllerEvents.TryRemove(false, del, out var handler))
@@ -347,11 +354,13 @@ namespace TaffyScript.MonoGame.Input
 
         public static void Update()
         {
+#if Windows
             if(_pollInterval > 0 && _frames++ >= _pollInterval)
             {
                 _ps4Manager.PollDevices();
                 _frames = 0;
             }
+#endif
             _keyboardPrevious = _keyboardCurrent;
             _keyboardCurrent = Keyboard.GetState();
             _mousePrevious = _mouseCurrent;

@@ -227,7 +227,7 @@ namespace TaffyScript.MonoGame.Graphics
 
         public static explicit operator BitmapFont(TsObject obj)
         {
-            return (BitmapFont)obj.Value.WeakValue;
+            return (BitmapFont)obj.WeakValue;
         }
     }
 

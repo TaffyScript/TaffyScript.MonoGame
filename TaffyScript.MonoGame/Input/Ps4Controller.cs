@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if Windows
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -170,10 +172,10 @@ namespace TaffyScript.MonoGame.Input
             var rx = Clamp((message[3] - 128) * AXISNORMAl, -1, 1);
             var ry = Clamp((message[4] - 128) * AXISNORMAl, -1, 1);
 
-            _lx = Math.Abs(lx) >= LeftAxisDeadZone ? lx : 0;
-            _ly = Math.Abs(ly) >= LeftAxisDeadZone ? ly : 0;
-            _rx = Math.Abs(rx) >= RightAxisDeadZone ? rx : 0;
-            _ry = Math.Abs(ry) >= RightAxisDeadZone ? ry : 0;
+            _lx = System.Math.Abs(lx) >= LeftAxisDeadZone ? lx : 0;
+            _ly = System.Math.Abs(ly) >= LeftAxisDeadZone ? ly : 0;
+            _rx = System.Math.Abs(rx) >= RightAxisDeadZone ? rx : 0;
+            _ry = System.Math.Abs(ry) >= RightAxisDeadZone ? ry : 0;
 
             _leftTrigger = Clamp(message[8] * TRIGGERNORMAL, 0, 1);
             _rightTrigger = Clamp(message[9] * TRIGGERNORMAL, 0, 1);
@@ -220,3 +222,5 @@ namespace TaffyScript.MonoGame.Input
         #endregion
     }
 }
+
+#endif //Windows

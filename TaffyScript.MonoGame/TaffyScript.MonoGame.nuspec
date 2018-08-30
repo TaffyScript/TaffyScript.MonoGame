@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>TaffyScript.MonoGame</id>
+    <version>0.1.0</version>
+    <title>TaffyScript.MonoGame</title>
+    <authors>mystborn</authors>
+    <owners>Christopher Kramer</owners>
+    <licenseUrl>https://github.com/TaffyScript/TaffyScript.MonoGame/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/TaffyScript/TaffyScript.MonoGame</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Provides access to MonoGame functionality from TaffyScript</description>
+    <releaseNotes>Initial Release</releaseNotes>
+    <copyright>Copyright 2018</copyright>
+    <tags>monogame game taffyscript</tags>
+  </metadata>
+</package>

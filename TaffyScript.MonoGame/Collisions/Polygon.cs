@@ -7,7 +7,7 @@ using TaffyScript.MonoGame.Graphics;
 
 namespace TaffyScript.MonoGame.Collisions
 {
-    [WeakObject]
+    [TaffyScriptObject]
     public class Polygon : Shape
     {
         #region Fields
@@ -16,7 +16,7 @@ namespace TaffyScript.MonoGame.Collisions
         private RectangleF _boundingBox;
         private Vector2[] _edgeNormals;
         private Vector2[] _points;
-        private Vector2 _rotationPivot;
+        private Vector2 _center;
 
         protected bool _isDirty = true;
         protected Vector2[] _originalPoints;
@@ -68,14 +68,14 @@ namespace TaffyScript.MonoGame.Collisions
             }
         }
 
-        public Vector2 RotationPivot
+        public Vector2 Center
         {
-            get => _rotationPivot;
+            get => _center;
             set
             {
-                if(value != _rotationPivot)
+                if(value != _center)
                 {
-                    _rotationPivot = value;
+                    _center = value;
                     _isDirty = true;
                 }
             }
@@ -121,12 +121,12 @@ namespace TaffyScript.MonoGame.Collisions
             {
                 case "rotation":
                     return _rotation;
-                case "pivot":
-                    return new TsObject[] { _rotationPivot.X, _rotationPivot.Y };
-                case "pivot_x":
-                    return _rotationPivot.X;
-                case "pivot_y":
-                    return _rotationPivot.Y;
+                case "center":
+                    return new TsObject[] { _center.X, _center.Y };
+                case "center_x":
+                    return _center.X;
+                case "center_y":
+                    return _center.Y;
                 case "points":
                     //This should only be used while debugging.
                     var result = new TsObject[Points.Length];
@@ -145,15 +145,15 @@ namespace TaffyScript.MonoGame.Collisions
                 case "rotation":
                     Rotation = (float)value;
                     break;
-                case "pivot":
-                    var array = value.GetArray1D();
-                    RotationPivot = new Vector2((float)array[0], (float)array[1]);
+                case "center":
+                    var array = value.GetArray();
+                    Center = new Vector2((float)array[0], (float)array[1]);
                     break;
-                case "pivot_x":
-                    RotationPivot = new Vector2((float)value, RotationPivot.Y);
+                case "center_x":
+                    Center = new Vector2((float)value, Center.Y);
                     break;
-                case "pivot_y":
-                    RotationPivot = new Vector2(RotationPivot.X, (float)value);
+                case "center_y":
+                    Center = new Vector2(Center.X, (float)value);
                     break;
                 default:
                     base.SetMember(name, value);
@@ -238,11 +238,9 @@ namespace TaffyScript.MonoGame.Collisions
             {
                 var cos = MathF.Cos(_rotation);
                 var sin = MathF.Sin(_rotation);
-                //var offset = new Vector2(cos * _rotationPivot.X - sin * _rotationPivot.Y, sin * _rotationPivot.X + cos * _rotationPivot.Y);
-                //Console.WriteLine(offset);
                 for (var i = 0; i < _originalPoints.Length; i++)
                 {
-                    var p = _originalPoints[i] - _rotationPivot;
+                    var p = _originalPoints[i] - _center;
                     p = new Vector2(cos * p.X - sin * p.Y, sin * p.X + cos * p.Y);
 
                     _points[i] = p;
@@ -250,7 +248,8 @@ namespace TaffyScript.MonoGame.Collisions
             }
             else
             {
-                Array.Copy(_originalPoints, _points, _points.Length);
+                for (var i = 0; i < _originalPoints.Length; i++)
+                    _points[i] = _originalPoints[i] - _center;
             }
 
             BuildEdgeNormals();
@@ -297,7 +296,7 @@ namespace TaffyScript.MonoGame.Collisions
             Vector2[] points = new Vector2[args.Length];
             for (var i = 0; i < args.Length; i++)
             {
-                var array = args[i].GetArray1D();
+                var array = args[i].GetArray();
                 points[i] = new Vector2((float)array[0], (float)array[1]);
             }
             return points;

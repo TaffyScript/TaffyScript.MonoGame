@@ -2,7 +2,7 @@
 
 namespace TaffyScript.MonoGame.Collisions
 {
-    [WeakObject]
+    [TaffyScriptObject]
     public class Box : Polygon
     {
         private float _width;

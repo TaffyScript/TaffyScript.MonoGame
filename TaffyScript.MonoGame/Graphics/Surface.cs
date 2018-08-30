@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace TaffyScript.MonoGame.Graphics
 {
-    [WeakObject]
+    [TaffyScriptObject]
     public class Surface : ITsInstance
     {
         public TsObject this[string memberName]
@@ -81,7 +81,7 @@ namespace TaffyScript.MonoGame.Graphics
                 default:
                     throw new MemberAccessException();
             }
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
         public TsDelegate GetDelegate(string delegateName)
@@ -115,25 +115,25 @@ namespace TaffyScript.MonoGame.Graphics
             switch (delegateName)
             {
                 case "draw":
-                    del = new TsDelegate(draw, "draw", this);
+                    del = new TsDelegate(draw, "draw");
                     return true;
                 case "draw_stretched":
-                    del = new TsDelegate(draw_stretched, "draw_stretched", this);
+                    del = new TsDelegate(draw_stretched, "draw_stretched");
                     return true;
                 case "draw_ext":
-                    del = new TsDelegate(draw_ext, "draw_ext", this);
+                    del = new TsDelegate(draw_ext, "draw_ext");
                     return true;
                 case "draw_part":
-                    del = new TsDelegate(draw_part, "draw_part", this);
+                    del = new TsDelegate(draw_part, "draw_part");
                     return true;
                 case "draw_part_stretched":
-                    del = new TsDelegate(draw_part_stretched, "draw_part_stretched", this);
+                    del = new TsDelegate(draw_part_stretched, "draw_part_stretched");
                     return true;
                 case "draw_part_ext":
-                    del = new TsDelegate(draw_part_ext, "draw_part_ext", this);
+                    del = new TsDelegate(draw_part_ext, "draw_part_ext");
                     return true;
                 case "dispose":
-                    del = new TsDelegate(dispose, "dispose", this);
+                    del = new TsDelegate(dispose, "dispose");
                     return true;
                 default:
                     del = null;
@@ -143,30 +143,30 @@ namespace TaffyScript.MonoGame.Graphics
 
         public static implicit operator TsObject(Surface surface)
         {
-            return new TsObject(surface);
+            return new TsInstanceWrapper(surface);
         }
 
         public static explicit operator Surface(TsObject obj)
         {
-            return (Surface)obj.Value.WeakValue;
+            return (Surface)obj.WeakValue;
         }
 
-        public TsObject draw(ITsInstance target, params TsObject[] args)
+        public TsObject draw(params TsObject[] args)
         {
             SpriteBatchManager.SpriteBatch.Draw(Source, new Vector2((float)args[0], (float)args[1]), SpriteBatchManager.DrawColor);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        public TsObject draw_stretched(ITsInstance target, params TsObject[] args)
+        public TsObject draw_stretched(params TsObject[] args)
         {
             SpriteBatchManager.SpriteBatch.Draw(Source,
                                                 new Rectangle((int)args[0], (int)args[1], (int)args[2], (int)args[3]),
                                                 null,
                                                 SpriteBatchManager.DrawColor);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        public TsObject draw_ext(ITsInstance target, params TsObject[] args)
+        public TsObject draw_ext(params TsObject[] args)
         {
             SpriteBatchManager.SpriteBatch.Draw(Source,
                                                 new Rectangle((int)args[0], (int)args[1], (int)args[2], (int)args[3]),
@@ -176,28 +176,28 @@ namespace TaffyScript.MonoGame.Graphics
                                                 Vector2.Zero,
                                                 SpriteEffects.None,
                                                 0f);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        public TsObject draw_part(ITsInstance target, params TsObject[] args)
+        public TsObject draw_part(params TsObject[] args)
         {
             SpriteBatchManager.SpriteBatch.Draw(Source,
                                                 new Rectangle((int)args[0], (int)args[1], (int)args[4], (int)args[5]),
                                                 new Rectangle((int)args[2], (int)args[3], (int)args[4], (int)args[5]),
                                                 SpriteBatchManager.DrawColor);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        public TsObject draw_part_stretched(ITsInstance target, params TsObject[] args)
+        public TsObject draw_part_stretched(params TsObject[] args)
         {
             SpriteBatchManager.SpriteBatch.Draw(Source,
                                                 new Rectangle((int)args[0], (int)args[1], (int)args[2], (int)args[3]),
                                                 new Rectangle((int)args[4], (int)args[5], (int)args[6], (int)args[7]),
                                                 SpriteBatchManager.DrawColor);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        public TsObject draw_part_ext(ITsInstance target, params TsObject[] args)
+        public TsObject draw_part_ext(params TsObject[] args)
         {
             SpriteBatchManager.SpriteBatch.Draw(Source,
                                                 new Rectangle((int)args[0], (int)args[1], (int)args[2], (int)args[3]),
@@ -207,13 +207,13 @@ namespace TaffyScript.MonoGame.Graphics
                                                 Vector2.Zero,
                                                 SpriteEffects.None,
                                                 0f);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        public TsObject dispose(ITsInstance inst, params TsObject[] args)
+        public TsObject dispose(params TsObject[] args)
         {
             Source.Dispose();
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
     }
 }

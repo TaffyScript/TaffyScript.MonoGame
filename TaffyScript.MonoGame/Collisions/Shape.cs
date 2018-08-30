@@ -34,17 +34,17 @@ namespace TaffyScript.MonoGame.Collisions
             switch (name)
             {
                 case "overlaps":
-                    return overlaps(null, args);
+                    return overlaps(args);
                 case "collides_with":
-                    return collides_with(null, args);
+                    return collides_with(args);
                 case "collides_with_line":
-                    return collides_with_line(null, args);
+                    return collides_with_line(args);
                 case "contains_point":
-                    return contains_point(null, args);
+                    return contains_point(args);
                 case "collides_with_point":
-                    return collides_with_point(null, args);
+                    return collides_with_point(args);
                 case "debug_draw":
-                    return debug_draw(null, args);
+                    return debug_draw(args);
                 default:
                     throw new MissingMethodException(ObjectType, name);
             }
@@ -85,7 +85,7 @@ namespace TaffyScript.MonoGame.Collisions
             switch(name)
             {
                 case "position":
-                    var array = value.GetArray1D();
+                    var array = value.GetArray();
                     Position = new Vector2((float)array[0], (float)array[1]);
                     break;
                 case "position_x":
@@ -104,22 +104,22 @@ namespace TaffyScript.MonoGame.Collisions
             switch (name)
             {
                 case "overlaps":
-                    del = new TsDelegate(overlaps, name, this);
+                    del = new TsDelegate(overlaps, name);
                     return true;
                 case "collides_with":
-                    del = new TsDelegate(collides_with, name, this);
+                    del = new TsDelegate(collides_with, name);
                     return true;
                 case "collides_with_line":
-                    del = new TsDelegate(collides_with_line, name, this);
+                    del = new TsDelegate(collides_with_line, name);
                     return true;
                 case "contains_point":
-                    del = new TsDelegate(contains_point, name, this);
+                    del = new TsDelegate(contains_point, name);
                     return true;
                 case "collides_with_point":
-                    del = new TsDelegate(collides_with_point, name, this);
+                    del = new TsDelegate(collides_with_point, name);
                     return true;
                 case "debug_draw":
-                    del = new TsDelegate(debug_draw, name, this);
+                    del = new TsDelegate(debug_draw, name);
                     return true;
                 default:
                     del = null;
@@ -134,45 +134,45 @@ namespace TaffyScript.MonoGame.Collisions
             throw new MissingMethodException(ObjectType, memberName);
         }
 
-        private TsObject overlaps(ITsInstance inst, TsObject[] args)
+        private TsObject overlaps(TsObject[] args)
         {
             return Overlaps((Shape)args[0]);
         }
 
-        private TsObject collides_with(ITsInstance inst, TsObject[] args)
+        private TsObject collides_with(TsObject[] args)
         {
             return CollidesWithShape((Shape)args[0], out _);
         }
 
-        private TsObject collides_with_line(ITsInstance inst, TsObject[] args)
+        private TsObject collides_with_line(TsObject[] args)
         {
             return CollidesWithLine(new Vector2((float)args[0], (float)args[1]), new Vector2((float)args[2], (float)args[3]));
         }
 
-        private TsObject contains_point(ITsInstance inst, TsObject[] args)
+        private TsObject contains_point(TsObject[] args)
         {
             return ContainsPoint(new Vector2((float)args[0], (float)args[1]));
         }
 
-        private TsObject collides_with_point(ITsInstance inst, TsObject[] args)
+        private TsObject collides_with_point(TsObject[] args)
         {
             return CollidesWithPoint(new Vector2((float)args[0], (float)args[1]), out _);
         }
 
-        private TsObject debug_draw(ITsInstance inst, TsObject[] args)
+        private TsObject debug_draw(TsObject[] args)
         {
             DebugDraw(SpriteBatchManager.SpriteBatch, args is null || args.Length == 0 ? SpriteBatchManager.DrawColor : ((TsColor)args[0]).Source);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
         public static implicit operator TsObject(Shape shape)
         {
-            return new TsObject(shape);
+            return new TsInstanceWrapper(shape);
         }
 
         public static explicit operator Shape(TsObject obj)
         {
-            return (Shape)obj.Value.WeakValue;
+            return (Shape)obj.WeakValue;
         }
     }
 }

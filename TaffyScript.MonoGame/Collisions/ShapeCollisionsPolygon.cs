@@ -99,7 +99,7 @@ namespace TaffyScript.MonoGame.Collisions
 
                 // Check if the current interval distance is the minimum one. If so store the interval distance and the current distance.
                 // This will be used to calculate the minimum translation vector
-                intervalDist = Math.Abs(intervalDist);
+                intervalDist = System.Math.Abs(intervalDist);
                 if (intervalDist < minIntervalDistance)
                 {
                     // If the intervalDist == 0, the two objects are just touching each other, not colliding.

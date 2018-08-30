@@ -9,7 +9,7 @@ using TaffyScript.MonoGame.Graphics;
 
 namespace TaffyScript.MonoGame.Collisions
 {
-    [WeakObject]
+    [TaffyScriptObject]
     public class Circle : Shape
     {
         private float _radius;

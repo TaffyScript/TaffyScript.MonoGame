@@ -37,25 +37,25 @@ namespace TaffyScript.MonoGame.Graphics
             switch(scriptName)
             {
                 case "draw_string":
-                    return draw_string(null, args);
+                    return draw_string(args);
                 case "draw_string_color":
-                    return draw_string_color(null, args);
+                    return draw_string_color(args);
                 case "draw_string_part":
-                    return draw_string_part(null, args);
+                    return draw_string_part(args);
                 case "draw_string_part_color":
-                    return draw_string_part_color(null, args);
+                    return draw_string_part_color(args);
                 case "measure_string":
-                    return measure_string(null, args);
+                    return measure_string(args);
                 case "measure_string_width":
-                    return measure_string_width(null, args);
+                    return measure_string_width(args);
                 case "measure_string_height":
-                    return measure_string_height(null, args);
+                    return measure_string_height(args);
                 case "measure_string_part":
-                    return measure_string_part(null, args);
+                    return measure_string_part(args);
                 case "measure_string_part_width":
-                    return measure_string_part_width(null, args);
+                    return measure_string_part_width(args);
                 case "measure_string_part_height":
-                    return measure_string_part_height(null, args);
+                    return measure_string_part_height(args);
                 default:
                     throw new MissingMethodException(ObjectType, scriptName);
             }
@@ -91,34 +91,34 @@ namespace TaffyScript.MonoGame.Graphics
             switch (delegateName)
             {
                 case "draw_string":
-                    del = new TsDelegate(draw_string, "draw_string", this);
+                    del = new TsDelegate(draw_string, "draw_string");
                     return true;
                 case "draw_string_color":
-                    del = new TsDelegate(draw_string_color, "draw_string_color", this);
+                    del = new TsDelegate(draw_string_color, "draw_string_color");
                     return true;
                 case "draw_string_part":
-                    del = new TsDelegate(draw_string_part, "draw_string_part", this);
+                    del = new TsDelegate(draw_string_part, "draw_string_part");
                     return true;
                 case "draw_string_part_color":
-                    del = new TsDelegate(draw_string_part_color, "draw_string_part_color", this);
+                    del = new TsDelegate(draw_string_part_color, "draw_string_part_color");
                     return true;
                 case "measure_string":
-                    del = new TsDelegate(measure_string, "measure_string", this);
+                    del = new TsDelegate(measure_string, "measure_string");
                     return true;
                 case "measure_string_width":
-                    del = new TsDelegate(measure_string_width, "measure_string_width", this);
+                    del = new TsDelegate(measure_string_width, "measure_string_width");
                     return true;
                 case "measure_string_height":
-                    del = new TsDelegate(measure_string_height, "measure_string_height", this);
+                    del = new TsDelegate(measure_string_height, "measure_string_height");
                     return true;
                 case "measure_string_part":
-                    del = new TsDelegate(measure_string_part, "measure_string_part", this);
+                    del = new TsDelegate(measure_string_part, "measure_string_part");
                     return true;
                 case "measure_string_part_width":
-                    del = new TsDelegate(measure_string_part_width, "measure_string_part_width", this);
+                    del = new TsDelegate(measure_string_part_width, "measure_string_part_width");
                     return true;
                 case "measure_string_part_height":
-                    del = new TsDelegate(measure_string_part_height, "measure_string_part_height", this);
+                    del = new TsDelegate(measure_string_part_height, "measure_string_part_height");
                     return true;
                 default:
                     del = null;
@@ -126,70 +126,70 @@ namespace TaffyScript.MonoGame.Graphics
             }
         }
 
-        private TsObject draw_string(ITsInstance inst, TsObject[] args)
+        private TsObject draw_string(TsObject[] args)
         {
             DrawString((string)args[0], new Vector2((float)args[1], (float)args[2]), SpriteBatchManager.DrawColor);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        private TsObject draw_string_color(ITsInstance inst, TsObject[] args)
+        private TsObject draw_string_color(TsObject[] args)
         {
             DrawString((string)args[0], new Vector2((float)args[1], (float)args[2]), ((TsColor)args[3]).Source);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        private TsObject draw_string_part(ITsInstance inst, TsObject[] args)
+        private TsObject draw_string_part(TsObject[] args)
         {
             DrawString((string)args[0], new Vector2((float)args[1], (float)args[2]), (int)args[3], (int)args[4], SpriteBatchManager.DrawColor);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        private TsObject draw_string_part_color(ITsInstance inst, TsObject[] args)
+        private TsObject draw_string_part_color(TsObject[] args)
         {
             DrawString((string)args[0], new Vector2((float)args[1], (float)args[2]), (int)args[3], (int)args[4], ((TsColor)args[5]).Source);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        private TsObject measure_string(ITsInstance inst, TsObject[] args)
+        private TsObject measure_string(TsObject[] args)
         {
             var size = MeasureString((string)args[0]);
             return new TsObject[] { size.X, size.Y };
         }
 
-        private TsObject measure_string_width(ITsInstance inst, TsObject[] args)
+        private TsObject measure_string_width(TsObject[] args)
         {
             return MeasureString((string)args[0]).X;
         }
 
-        private TsObject measure_string_height(ITsInstance inst, TsObject[] args)
+        private TsObject measure_string_height(TsObject[] args)
         {
             return MeasureString((string)args[0]).Y;
         }
 
-        private TsObject measure_string_part(ITsInstance inst, TsObject[] args)
+        private TsObject measure_string_part(TsObject[] args)
         {
             var size = MeasureString((string)args[0], (int)args[1], (int)args[2]);
             return new TsObject[] { size.X, size.Y };
         }
 
-        private TsObject measure_string_part_width(ITsInstance inst, TsObject[] args)
+        private TsObject measure_string_part_width(TsObject[] args)
         {
             return MeasureString((string)args[0], (int)args[1], (int)args[2]).X;
         }
 
-        private TsObject measure_string_part_height(ITsInstance inst, TsObject[] args)
+        private TsObject measure_string_part_height(TsObject[] args)
         {
             return MeasureString((string)args[0], (int)args[1], (int)args[2]).Y;
         }
 
         public static implicit operator TsObject(Font font)
         {
-            return new TsObject(font);
+            return new TsInstanceWrapper(font);
         }
 
         public static explicit operator Font(TsObject obj)
         {
-            return (Font)obj.Value.WeakValue;
+            return (Font)obj.WeakValue;
         }
 
         public abstract Vector2 MeasureString(string text);

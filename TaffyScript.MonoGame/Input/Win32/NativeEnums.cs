@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if Windows
+
+using System;
 
 namespace TaffyScript.MonoGame.Input.Win32
 {
@@ -94,3 +96,5 @@ namespace TaffyScript.MonoGame.Input.Win32
         NotImplemented = 0xC0110020
     }
 }
+
+#endif

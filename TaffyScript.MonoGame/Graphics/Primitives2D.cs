@@ -66,16 +66,16 @@ namespace TaffyScript.MonoGame.Graphics
 
             List<Vector2> vectors = new List<Vector2>();
 
-            const double max = 2.0 * Math.PI;
+            const double max = 2.0 * System.Math.PI;
             double step = max / sides;
 
             for (double theta = 0.0; theta < max; theta += step)
             {
-                vectors.Add(new Vector2((float)(radius * Math.Cos(theta)), (float)(radius * Math.Sin(theta))));
+                vectors.Add(new Vector2((float)(radius * System.Math.Cos(theta)), (float)(radius * System.Math.Sin(theta))));
             }
 
             // then add the first vector again so it's a complete loop
-            vectors.Add(new Vector2((float)(radius * Math.Cos(0)), (float)(radius * Math.Sin(0))));
+            vectors.Add(new Vector2((float)(radius * System.Math.Cos(0)), (float)(radius * System.Math.Sin(0))));
 
             // Cache this circle so that it can be quickly drawn next time
             circleCache.Add(circleKey, vectors);
@@ -360,7 +360,7 @@ namespace TaffyScript.MonoGame.Graphics
             float distance = Vector2.Distance(point1, point2);
 
             // calculate the angle between the two vectors
-            float angle = (float)Math.Atan2(point2.Y - point1.Y, point2.X - point1.X);
+            float angle = (float)System.Math.Atan2(point2.Y - point1.Y, point2.X - point1.X);
 
             DrawLine(spriteBatch, point1, distance, angle, color, thickness);
         }

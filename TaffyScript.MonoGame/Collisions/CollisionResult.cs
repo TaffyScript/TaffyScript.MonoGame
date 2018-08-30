@@ -11,12 +11,12 @@ namespace TaffyScript.MonoGame.Collisions
 
         public void RemoveHorizontalTranslation(Vector2 deltaMovement)
         {
-            if (Math.Sign(Normal.X) != Math.Sign(deltaMovement.X) || (deltaMovement.X == 0 && Normal.X != 0))
+            if (System.Math.Sign(Normal.X) != System.Math.Sign(deltaMovement.X) || (deltaMovement.X == 0 && Normal.X != 0))
             {
                 var responseDistance = MinimumTranslationVector.Length();
                 var fix = responseDistance / Normal.Y;
 
-                if (Math.Abs(Normal.X) != 1 && Math.Abs(fix) < Math.Abs(deltaMovement.Y * 3f))
+                if (System.Math.Abs(Normal.X) != 1 && System.Math.Abs(fix) < System.Math.Abs(deltaMovement.Y * 3f))
                 {
                     MinimumTranslationVector = new Vector2(0, -fix);
                 }

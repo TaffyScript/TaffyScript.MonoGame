@@ -73,22 +73,22 @@ namespace TaffyScript.MonoGame.Sound
             switch(delegateName)
             {
                 case "apply_3d":
-                    del = new TsDelegate(apply_3d, delegateName, this);
+                    del = new TsDelegate(apply_3d, delegateName);
                     return true;
                 case "dispose":
-                    del = new TsDelegate(dispose, delegateName, this);
+                    del = new TsDelegate(dispose, delegateName);
                     return true;
                 case "pause":
-                    del = new TsDelegate(pause, delegateName, this);
+                    del = new TsDelegate(pause, delegateName);
                     return true;
                 case "play":
-                    del = new TsDelegate(play, delegateName, this);
+                    del = new TsDelegate(play, delegateName);
                     return true;
                 case "resume":
-                    del = new TsDelegate(resume, delegateName, this);
+                    del = new TsDelegate(resume, delegateName);
                     return true;
                 case "stop":
-                    del = new TsDelegate(stop, delegateName, this);
+                    del = new TsDelegate(stop, delegateName);
                     return true;
                 default:
                     del = null;
@@ -108,65 +108,65 @@ namespace TaffyScript.MonoGame.Sound
             switch (scriptName)
             {
                 case "apply_3d":
-                    return apply_3d(null, args);
+                    return apply_3d(args);
                 case "dispose":
-                    return dispose(null, args);
+                    return dispose(args);
                 case "pause":
-                    return pause(null, args);
+                    return pause(args);
                 case "play":
-                    return play(null, args);
+                    return play(args);
                 case "resume":
-                    return resume(null, args);
+                    return resume(args);
                 case "stop":
-                    return stop(null, args);
+                    return stop(args);
                 default:
                     throw new MissingMethodException(ObjectType, scriptName);
             }
         }
 
-        private TsObject apply_3d(ITsInstance inst, TsObject[] args)
+        private TsObject apply_3d(TsObject[] args)
         {
             throw new NotImplementedException();
         }
 
-        private TsObject dispose(ITsInstance inst, TsObject[] args)
+        private TsObject dispose(TsObject[] args)
         {
             Source.Dispose();
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        private TsObject pause(ITsInstance inst, TsObject[] args)
+        private TsObject pause(TsObject[] args)
         {
             Source.Pause();
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        private TsObject play(ITsInstance inst, TsObject[] args)
+        private TsObject play(TsObject[] args)
         {
             Source.Play();
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        private TsObject resume(ITsInstance inst, TsObject[] args)
+        private TsObject resume(TsObject[] args)
         {
             Source.Resume();
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        private TsObject stop(ITsInstance inst, TsObject[] args)
+        private TsObject stop(TsObject[] args)
         {
             Source.Stop();
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
         public static implicit operator TsObject(TsSoundInstance soundInstance)
         {
-            return new TsObject(soundInstance);
+            return new TsInstanceWrapper(soundInstance);
         }
 
         public static explicit operator TsSoundInstance(TsObject obj)
         {
-            return (TsSoundInstance)obj.Value.WeakValue;
+            return (TsSoundInstance)obj.WeakValue;
         }
     }
 }

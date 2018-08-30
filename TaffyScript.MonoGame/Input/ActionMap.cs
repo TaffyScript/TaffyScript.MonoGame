@@ -35,11 +35,11 @@ namespace TaffyScript.MonoGame.Input
             switch(scriptName)
             {
                 case "add_key":
-                    return add_key(null, args);
+                    return add_key(args);
                 case "add_button":
-                    return add_button(null, args);
+                    return add_button(args);
                 case "reset":
-                    return reset(null, args);
+                    return reset(args);
                 default:
                     throw new MissingMethodException(ObjectType, scriptName);
             }
@@ -57,13 +57,13 @@ namespace TaffyScript.MonoGame.Input
             switch(scriptName)
             {
                 case "add_key":
-                    del = new TsDelegate(add_key, "add_key", this);
+                    del = new TsDelegate(add_key, "add_key");
                     return true;
                 case "add_button":
-                    del = new TsDelegate(add_button, "add_button", this);
+                    del = new TsDelegate(add_button, "add_button");
                     return true;
                 case "reset":
-                    del = new TsDelegate(reset, "reset", this);
+                    del = new TsDelegate(reset, "reset");
                     return true;
                 default:
                     del = null;
@@ -121,33 +121,33 @@ namespace TaffyScript.MonoGame.Input
             CurrentPressed = false;
         }
 
-        private TsObject add_key(ITsInstance inst, TsObject[] args)
+        private TsObject add_key(TsObject[] args)
         {
             Keys.Add((Keys)(float)args[0]);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        private TsObject add_button(ITsInstance inst, TsObject[] args)
+        private TsObject add_button(TsObject[] args)
         {
             Buttons.Add((Buttons)(float)args[0]);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        protected virtual TsObject reset(ITsInstance inst, TsObject[] args)
+        protected virtual TsObject reset(TsObject[] args)
         {
             Keys.Clear();
             Buttons.Clear();
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
         public static implicit operator TsObject(ActionMap map)
         {
-            return new TsObject(map);
+            return new TsInstanceWrapper(map);
         }
 
         public static explicit operator ActionMap(TsObject obj)
         {
-            return (ActionMap)obj.Value.WeakValue;
+            return (ActionMap)obj.WeakValue;
         }
     }
 
@@ -164,7 +164,7 @@ namespace TaffyScript.MonoGame.Input
         public override TsObject Call(string scriptName, TsObject[] args)
         {
             if (scriptName == "add_mouse_button")
-                return add_mouse_button(null, args);
+                return add_mouse_button(args);
             return base.Call(scriptName, args);
         }
 
@@ -172,7 +172,7 @@ namespace TaffyScript.MonoGame.Input
         {
             if (scriptName == "add_mouse_button")
             {
-                del = new TsDelegate(add_mouse_button, "add_mouse_button", this);
+                del = new TsDelegate(add_mouse_button, "add_mouse_button");
                 return true;
             }
             return base.TryGetDelegate(scriptName, out del);
@@ -194,10 +194,10 @@ namespace TaffyScript.MonoGame.Input
             }
         }
 
-        private TsObject add_mouse_button(ITsInstance inst, TsObject[] args)
+        private TsObject add_mouse_button(TsObject[] args)
         {
             MouseButtons.Add((MouseButtons)(float)args[0]);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
     }
 }

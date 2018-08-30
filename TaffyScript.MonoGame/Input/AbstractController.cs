@@ -98,10 +98,10 @@ namespace TaffyScript.MonoGame.Input
             switch (delegateName)
             {
                 case "current_button_down":
-                    del = new TsDelegate((t, a) => ((AbstractController)t).CurrentButtonDown((Buttons)(float)a[0]), "current_button_down", this);
+                    del = new TsDelegate((a) => CurrentButtonDown((Buttons)(float)a[0]), "current_button_down");
                     return true;
                 case "previous_button_down":
-                    del = new TsDelegate((t, a) => ((AbstractController)t).PreviousButtonDown((Buttons)(float)a[0]), "previous_button_down", this);
+                    del = new TsDelegate((a) => PreviousButtonDown((Buttons)(float)a[0]), "previous_button_down");
                     return true;
                 default:
                     del = null;

@@ -65,7 +65,7 @@ namespace TaffyScript.MonoGame.Graphics
 
         public static explicit operator TsSpriteFont(TsObject obj)
         {
-            return (TsSpriteFont)obj.Value.WeakValue;
+            return (TsSpriteFont)obj.WeakValue;
         }
     }
 }

@@ -86,12 +86,12 @@ namespace TaffyScript.MonoGame.Graphics
 
         public static implicit operator TsObject(TsColor color)
         {
-            return new TsObject(color);
+            return new TsInstanceWrapper(color);
         }
 
         public static explicit operator TsColor(TsObject obj)
         {
-            return (TsColor)obj.Value.WeakValue;
+            return (TsColor)obj.WeakValue;
         }
     }
 }

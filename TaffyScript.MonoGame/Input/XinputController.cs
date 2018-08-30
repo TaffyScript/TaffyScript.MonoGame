@@ -15,10 +15,10 @@ namespace TaffyScript.MonoGame.Input
 
         public override int Index { get; }
         public override bool IsConnected => _connected;
-        public override float LX => Math.Abs(_currentState.ThumbSticks.Left.X) >= LeftAxisDeadZone ? _currentState.ThumbSticks.Left.X : 0;
-        public override float LY => Math.Abs(_currentState.ThumbSticks.Left.Y) >= LeftAxisDeadZone ? _currentState.ThumbSticks.Left.Y : 0;
-        public override float RX => Math.Abs(_currentState.ThumbSticks.Right.X) >= RightAxisDeadZone ? _currentState.ThumbSticks.Right.X : 0;
-        public override float RY => Math.Abs(_currentState.ThumbSticks.Right.Y) >= RightAxisDeadZone ? _currentState.ThumbSticks.Right.Y : 0;
+        public override float LX => System.Math.Abs(_currentState.ThumbSticks.Left.X) >= LeftAxisDeadZone ? _currentState.ThumbSticks.Left.X : 0;
+        public override float LY => System.Math.Abs(_currentState.ThumbSticks.Left.Y) >= LeftAxisDeadZone ? _currentState.ThumbSticks.Left.Y : 0;
+        public override float RX => System.Math.Abs(_currentState.ThumbSticks.Right.X) >= RightAxisDeadZone ? _currentState.ThumbSticks.Right.X : 0;
+        public override float RY => System.Math.Abs(_currentState.ThumbSticks.Right.Y) >= RightAxisDeadZone ? _currentState.ThumbSticks.Right.Y : 0;
         public override float LeftTrigger => _currentState.Triggers.Left;
         public override float RightTrigger => _currentState.Triggers.Right;
         public override string ObjectType => "xbox_controller";

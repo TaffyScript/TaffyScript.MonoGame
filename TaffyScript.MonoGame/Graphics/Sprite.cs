@@ -16,7 +16,7 @@ namespace TaffyScript.MonoGame.Graphics
     }
 
     [XmlRoot(ElementName = "Sprite")]
-    [WeakObject]
+    [TaffyScriptObject]
     public class Sprite : IXmlSerializable, ITsInstance
     {
         #region Fields
@@ -60,6 +60,8 @@ namespace TaffyScript.MonoGame.Graphics
 
                 _state = value;
                 Frames = States[value];
+                _frame = 0;
+                _ticks = 0;
             }
         }
 
@@ -135,19 +137,19 @@ namespace TaffyScript.MonoGame.Graphics
             switch(scriptName)
             {
                 case "draw":
-                    return draw(null, args);
+                    return draw(args);
                 case "draw_stretched":
-                    return draw_stretched(null, args);
+                    return draw_stretched(args);
                 case "draw_ext":
-                    return draw_ext(null, args);
+                    return draw_ext(args);
                 case "draw_part":
-                    return draw_part(null, args);
+                    return draw_part(args);
                 case "draw_part_stretched":
-                    return draw_part_stretched(null, args);
+                    return draw_part_stretched(args);
                 case "draw_part_ext":
-                    return draw_part_ext(null, args);
+                    return draw_part_ext(args);
                 case "update":
-                    return update(null, args);
+                    return update(args);
                 default:
                     throw new MissingMemberException(ObjectType, scriptName);
             }
@@ -200,11 +202,11 @@ namespace TaffyScript.MonoGame.Graphics
             switch (name)
             {
                 case "origin":
-                    var array = value.GetArray1D();
+                    var array = value.GetArray();
                     Origin = new Vector2((float)array[0], (float)array[1]);
                     break;
                 case "scale":
-                    array = value.GetArray1D();
+                    array = value.GetArray();
                     Scale = new Vector2((float)array[0], (float)array[2]);
                     break;
                 case "color":
@@ -235,25 +237,25 @@ namespace TaffyScript.MonoGame.Graphics
             switch (scriptName)
             {
                 case "draw":
-                    del = new TsDelegate(draw, "draw", this);
+                    del = new TsDelegate(draw, "draw");
                     return true;
                 case "draw_stretched":
-                    del = new TsDelegate(draw_stretched, "draw_stretched", this);
+                    del = new TsDelegate(draw_stretched, "draw_stretched");
                     return true;
                 case "draw_ext":
-                    del = new TsDelegate(draw_ext, "draw_ext", this);
+                    del = new TsDelegate(draw_ext, "draw_ext");
                     return true;
                 case "draw_part":
-                    del = new TsDelegate(draw_part, "draw_part", this);
+                    del = new TsDelegate(draw_part, "draw_part");
                     return true;
                 case "draw_part_stretched":
-                    del = new TsDelegate(draw_part_stretched, "draw_part_stretched", this);
+                    del = new TsDelegate(draw_part_stretched, "draw_part_stretched");
                     return true;
                 case "draw_part_ext":
-                    del = new TsDelegate(draw_part_ext, "draw_part_ext", this);
+                    del = new TsDelegate(draw_part_ext, "draw_part_ext");
                     return true;
                 case "update":
-                    del = new TsDelegate(update, "update", this);
+                    del = new TsDelegate(update, "update");
                     return true;
                 default:
                     del = null;
@@ -261,13 +263,13 @@ namespace TaffyScript.MonoGame.Graphics
             }
         }
 
-        public TsObject draw(ITsInstance inst, params TsObject[] args)
+        public TsObject draw(params TsObject[] args)
         {
             SpriteBatchManager.SpriteBatch.Draw(Texture, new Vector2((float)args[0], (float)args[1]), Frames[Frame], Color, Rotation, Origin, Scale, SpriteEffects.None, 0f);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        public TsObject draw_stretched(ITsInstance inst, params TsObject[] args)
+        public TsObject draw_stretched(params TsObject[] args)
         {
             SpriteBatchManager.SpriteBatch.Draw(Texture,
                                                 new Rectangle((int)args[0], (int)args[1], (int)args[2], (int)args[3]),
@@ -277,10 +279,10 @@ namespace TaffyScript.MonoGame.Graphics
                                                 Origin,
                                                 SpriteEffects.None,
                                                 0f);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        public TsObject draw_ext(ITsInstance inst, params TsObject[] args)
+        public TsObject draw_ext(params TsObject[] args)
         {
             SpriteBatchManager.SpriteBatch.Draw(Texture,
                                                 new Rectangle((int)args[0], (int)args[1], (int)args[2], (int)args[3]),
@@ -290,10 +292,10 @@ namespace TaffyScript.MonoGame.Graphics
                                                 Origin,
                                                 SpriteEffects.None,
                                                 0f);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        public TsObject draw_part(ITsInstance inst, params TsObject[] args)
+        public TsObject draw_part(params TsObject[] args)
         {
             var frame = Frames[Frame];
             SpriteBatchManager.SpriteBatch.Draw(Texture,
@@ -305,10 +307,10 @@ namespace TaffyScript.MonoGame.Graphics
                                                 Scale,
                                                 SpriteEffects.None,
                                                 0f);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        public TsObject draw_part_stretched(ITsInstance inst, params TsObject[] args)
+        public TsObject draw_part_stretched(params TsObject[] args)
         {
             var frame = Frames[Frame];
             SpriteBatchManager.SpriteBatch.Draw(Texture,
@@ -319,10 +321,10 @@ namespace TaffyScript.MonoGame.Graphics
                                                 Origin,
                                                 SpriteEffects.None,
                                                 0f);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        public TsObject draw_part_ext(ITsInstance inst, params TsObject[] args)
+        public TsObject draw_part_ext(params TsObject[] args)
         {
             var frame = Frames[Frame];
             SpriteBatchManager.SpriteBatch.Draw(Texture,
@@ -333,23 +335,23 @@ namespace TaffyScript.MonoGame.Graphics
                                                 Origin,
                                                 SpriteEffects.None,
                                                 0f);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        public TsObject update(ITsInstance inst, params TsObject[] args)
+        public TsObject update(params TsObject[] args)
         {
             Update();
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
         public static implicit operator TsObject(Sprite sprite)
         {
-            return new TsObject(sprite);
+            return new TsInstanceWrapper(sprite);
         }
 
         public static explicit operator Sprite(TsObject obj)
         {
-            return (Sprite)obj.Value.WeakValue;
+            return (Sprite)obj.WeakValue;
         }
 
         #endregion

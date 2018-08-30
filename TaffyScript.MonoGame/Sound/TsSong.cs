@@ -61,7 +61,7 @@ namespace TaffyScript.MonoGame.Sound
             switch(delegateName)
             {
                 case "dispose":
-                    del = new TsDelegate(dispose, "dispose", this);
+                    del = new TsDelegate(dispose, "dispose");
                     return true;
                 default:
                     del = null;
@@ -81,13 +81,13 @@ namespace TaffyScript.MonoGame.Sound
             switch (scriptName)
             {
                 case "dispose":
-                    return dispose(null, args);
+                    return dispose(args);
                 default:
                     throw new MissingMethodException(ObjectType, scriptName);
             }
         }
 
-        private TsObject dispose(ITsInstance inst, TsObject[] args)
+        private TsObject dispose(TsObject[] args)
         {
             if (!Source.IsDisposed)
             {
@@ -99,12 +99,12 @@ namespace TaffyScript.MonoGame.Sound
 
         public static implicit operator TsObject(TsSong song)
         {
-            return new TsObject(song);
+            return new TsInstanceWrapper(song);
         }
 
         public static explicit operator TsSong(TsObject obj)
         {
-            return (TsSong)obj.Value.WeakValue;
+            return (TsSong)obj.WeakValue;
         }
     }
 }

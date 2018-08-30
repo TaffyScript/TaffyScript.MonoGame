@@ -8,25 +8,25 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace TaffyScript.MonoGame.Graphics
 {
-    [WeakBaseType]
+    [TaffyScriptBaseType]
     public static class GraphicsMethods
     {
-        [WeakMethod]
-        public static TsObject render_target_set(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject render_target_set(TsObject[] args)
         {
             SpriteBatchManager.SetRenderTarget(((Surface)args[0]).Source);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        [WeakMethod]
-        public static TsObject render_target_reset(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject render_target_reset(TsObject[] args)
         {
             SpriteBatchManager.SetRenderTarget(null);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        [WeakMethod]
-        public static TsObject draw_begin(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject draw_begin(TsObject[] args)
         {
             if (!SpriteBatchManager.Drawing)
             {
@@ -36,8 +36,8 @@ namespace TaffyScript.MonoGame.Graphics
             return false;
         }
 
-        [WeakMethod]
-        public static TsObject draw_end(ITsInstance isnt, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject draw_end(TsObject[] args)
         {
             if (SpriteBatchManager.Drawing)
             {
@@ -47,55 +47,55 @@ namespace TaffyScript.MonoGame.Graphics
             return false;
         }
 
-        [WeakMethod]
-        public static TsObject draw_is_active(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject draw_is_active(TsObject[] args)
         {
             return SpriteBatchManager.Drawing;
         }
 
-        [WeakMethod]
-        public static TsObject draw_set_color(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject draw_set_color(TsObject[] args)
         {
             SpriteBatchManager.DrawColor = ((TsColor)args[0]).Source;
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        [WeakMethod]
-        public static TsObject draw_get_color(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject draw_get_color(TsObject[] args)
         {
             return new TsColor(SpriteBatchManager.DrawColor);
         }
 
-        [WeakMethod]
-        public static TsObject make_color(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject make_color(TsObject[] args)
         {
             return new TsColor(args);
         }
 
-        [WeakMethod]
-        public static TsObject draw_rectangle(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject draw_rectangle(TsObject[] args)
         {
             Primitives2D.FillRectangle(SpriteBatchManager.SpriteBatch,
                                        new Vector2((float)args[0], (float)args[1]),
                                        new Vector2((float)args[2], (float)args[3]),
                                        SpriteBatchManager.DrawColor,
                                        args.Length > 4 ? (float)args[4] * MathF.Deg2Rad : 0f);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        [WeakMethod]
-        public static TsObject draw_rectangle_color(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject draw_rectangle_color(TsObject[] args)
         {
             Primitives2D.FillRectangle(SpriteBatchManager.SpriteBatch,
                                        new Vector2((float)args[0], (float)args[1]),
                                        new Vector2((float)args[2], (float)args[3]),
                                        ((TsColor)args[4]).Source,
                                        args.Length > 5 ? (float)args[5] * MathF.Deg2Rad : 0f);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        [WeakMethod]
-        public static TsObject draw_circle(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject draw_circle(TsObject[] args)
         {
             var radius = (float)args[2];
             Primitives2D.DrawCircle(SpriteBatchManager.SpriteBatch,
@@ -104,11 +104,11 @@ namespace TaffyScript.MonoGame.Graphics
                                     (int)args[3],
                                     SpriteBatchManager.DrawColor,
                                     radius);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        [WeakMethod]
-        public static TsObject draw_circle_color(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject draw_circle_color(TsObject[] args)
         {
             var radius = (float)args[2];
             Primitives2D.DrawCircle(SpriteBatchManager.SpriteBatch,
@@ -117,7 +117,20 @@ namespace TaffyScript.MonoGame.Graphics
                                     (int)args[3],
                                     ((TsColor)args[4]).Source,
                                     radius);
-            return TsObject.Empty();
+            return TsObject.Empty;
+        }
+
+        [TaffyScriptMethod]
+        public static TsObject draw_set_background_color(TsObject[] args)
+        {
+            SpriteBatchManager.BackgroundColor = ((TsColor)args[0]).Source;
+            return TsObject.Empty;
+        }
+
+        [TaffyScriptMethod]
+        public static TsObject draw_get_background_color(TsObject[] args)
+        {
+            return new TsColor(SpriteBatchManager.BackgroundColor);
         }
     }
 }

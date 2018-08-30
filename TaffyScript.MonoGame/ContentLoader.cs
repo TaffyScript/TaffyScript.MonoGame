@@ -14,7 +14,7 @@ using TaffyScript.MonoGame.Sound;
 
 namespace TaffyScript.MonoGame
 {
-    [WeakBaseType]
+    [TaffyScriptBaseType]
     public class ContentLoader
     {
         private static Dictionary<string, ContentManager> _managers = new Dictionary<string, ContentManager>();
@@ -56,39 +56,39 @@ namespace TaffyScript.MonoGame
             _managers[folder].Unload();
         }
 
-        [WeakMethod]
-        public static TsObject unload_folder(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject unload_folder(TsObject[] args)
         {
             _managers[(string)args[0]].Unload();
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        [WeakMethod]
-        public static TsObject load_texture(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject load_texture(TsObject[] args)
         {
             return new TsTexture(args.Length == 2 ? Load<Texture2D>((string)args[0], (string)args[1]) : Load<Texture2D>((string)args[0]));
         }
 
-        [WeakMethod]
-        public static TsObject load_bmp_font_strip(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject load_bmp_font_strip(TsObject[] args)
         {
             return BitmapFont.FromStrip(((TsTexture)args[0]).Source, (string)args[1], (int)args[2], (int)args[3], (int)args[4], args.Length > 5 ? (bool)args[5] : false);
         }
 
-        [WeakMethod]
-        public static TsObject load_sprite_font(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject load_sprite_font(TsObject[] args)
         {
             return new TsSpriteFont(args.Length == 2 ? Load<SpriteFont>((string)args[0], (string)args[1]) : Load<SpriteFont>((string)args[0]));
         }
 
-        [WeakMethod]
-        public static TsObject load_song(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject load_song(TsObject[] args)
         {
             return new TsSong(Load<Song>((string)args[0]));
         }
 
-        [WeakMethod]
-        public static TsObject load_sound(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject load_sound(TsObject[] args)
         {
             return new TsSound(Load<SoundEffect>((string)args[0]));
         }

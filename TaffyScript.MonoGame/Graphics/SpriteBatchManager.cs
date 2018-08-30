@@ -19,6 +19,7 @@ namespace TaffyScript.MonoGame.Graphics
 
         public static bool Drawing { get; private set; }
         public static Color DrawColor { get; set; } = Color.White;
+        public static Color BackgroundColor { get; set; } = Color.CornflowerBlue;
         public static SpriteBatch SpriteBatch { get; private set; }
 
         public static BlendState Blend

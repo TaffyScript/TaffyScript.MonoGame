@@ -4,73 +4,124 @@ using System.Runtime.CompilerServices;
 
 namespace TaffyScript.MonoGame
 {
-    [WeakBaseType]
+    [TaffyScriptBaseType]
     public static class MathF
     {
         public const float Epsilon = 0.00001f;
         public const float Deg2Rad = 0.0174532924f;
         public const float Rad2Deg = 57.29578f;
 
-        [WeakMethod]
-        public static TsObject point_in_rectangle(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        public static TsObject point_in_rectangle(TsObject[] args)
         {
             var x = (float)args[0];
             var y = (float)args[1];
             return x >= (float)args[2] && y >= (float)args[3] && x <= (float)args[4] && y <= (float)args[5];
         }
 
-        [WeakMethod]
+        [TaffyScriptMethod]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TsObject length_dir(ITsInstance inst, TsObject[] args)
+        public static TsObject length_dir(TsObject[] args)
         {
             var vec = LengthDir((float)args[0], (float)args[1]);
             return new TsObject[] { vec.X, vec.Y };
         }
 
-        [WeakMethod]
-        public static TsObject length_dir_x(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TsObject length_dir_x(TsObject[] args)
         {
             return LengthDirX((float)args[0], (float)args[1]);
         }
 
-        [WeakMethod]
-        public static TsObject length_dir_y(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TsObject length_dir_y(TsObject[] args)
         {
             return LengthDirY((float)args[0], (float)args[1]);
         }
 
-        [WeakMethod]
-        public static TsObject to_radians(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TsObject to_radians(TsObject[] args)
         {
             return (float)args[0] * Deg2Rad;
         }
 
-        [WeakMethod]
-        public static TsObject to_degrees(ITsInstance inst, TsObject[] args)
+        [TaffyScriptMethod]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TsObject to_degrees(TsObject[] args)
         {
             return (float)args[0] * Rad2Deg;
         }
 
+        [TaffyScriptMethod]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TsObject floor_ext(TsObject[] args)
+        {
+            return Floor((float)args[0], (float)args[1]);
+        }
+
+        [TaffyScriptMethod]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TsObject round_ext(TsObject[] args)
+        {
+            return Round((float)args[0], (float)args[1]);
+        }
+
+        [TaffyScriptMethod]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TsObject ceil_ext(TsObject[] args)
+        {
+            return Ceil((float)args[0], (float)args[1]);
+        }
+
+        [TaffyScriptMethod]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TsObject point_direction(TsObject[] args)
+        {
+            return Atan2((float)args[3] - (float)args[1], (float)args[2] - (float)args[0]);
+        }
+
+        [TaffyScriptMethod]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TsObject point_distance(TsObject[] args)
+        {
+            return Sqrt(DistanceSquared((float)args[0], (float)args[1], (float)args[2], (float)args[3]));
+        }
+
+        [TaffyScriptMethod]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TsObject point_distance_squared(TsObject[] args)
+        {
+            return DistanceSquared((float)args[0], (float)args[1], (float)args[2], (float)args[3]);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector2 LengthDir(float length, float direction)
         {
-            return new Vector2((float)(length * Math.Cos(direction)), (float)(-length * Math.Sin(direction)));
+            return new Vector2((float)(length * System.Math.Cos(direction)), (float)(length * System.Math.Sin(direction)));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float LengthDirX(float length, float direction)
         {
-            return (float)(length * Math.Cos(direction));
+            return (float)(length * System.Math.Cos(direction));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float LengthDirY(float length, float direction)
         {
-            return (float)(-length * Math.Sin(direction));
+            return (float)(-length * System.Math.Sin(direction));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float DistanceSquared(Vector2 p1, Vector2 p2)
         {
             return ((p2.X - p1.X) * (p2.X - p1.X)) + ((p2.Y - p1.Y) * (p2.Y - p1.Y));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float DistanceSquared(float x1, float y1, float x2, float y2)
         {
             return ((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1));
@@ -78,7 +129,7 @@ namespace TaffyScript.MonoGame
 
         public static float Direction(float x1, float y1, float x2, float y2)
         {
-            var dir = MathHelper.ToDegrees((float)Math.Atan2(y1 - y2, x2 - x1));
+            var dir = MathHelper.ToDegrees((float)System.Math.Atan2(y1 - y2, x2 - x1));
             if (dir < 0f)
                 dir = 360f + dir;
             return dir;
@@ -86,7 +137,7 @@ namespace TaffyScript.MonoGame
 
         public static float Direction(Vector2 p1, Vector2 p2)
         {
-            var dir = MathHelper.ToDegrees((float)Math.Atan2(p1.Y - p2.Y, p2.X - p1.X));
+            var dir = MathHelper.ToDegrees((float)System.Math.Atan2(p1.Y - p2.Y, p2.X - p1.X));
             if (dir < 0f)
                 dir = 360f + dir;
             return dir;
@@ -95,19 +146,19 @@ namespace TaffyScript.MonoGame
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Floor(float f)
         {
-            return (float)Math.Floor(f);
+            return (float)System.Math.Floor(f);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Floor(float value, float n)
         {
-            return (float)Math.Floor(value / n) * n;
+            return (float)System.Math.Floor(value / n) * n;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int FloorToInt(float f)
         {
-            return (int)Math.Floor(f);
+            return (int)System.Math.Floor(f);
         }
 
         /// <summary>
@@ -125,19 +176,19 @@ namespace TaffyScript.MonoGame
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Ceil(float f)
         {
-            return (float)Math.Ceiling(f);
+            return (float)System.Math.Ceiling(f);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Ceil(float value, float n)
         {
-            return (float)Math.Ceiling(value / n) * n;
+            return (float)System.Math.Ceiling(value / n) * n;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int CeilToInt(float f)
         {
-            return (int)Math.Ceiling(f);
+            return (int)System.Math.Ceiling(f);
         }
 
         /// <summary>
@@ -154,19 +205,19 @@ namespace TaffyScript.MonoGame
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Round(float f)
         {
-            return (float)Math.Round(f);
+            return (float)System.Math.Round(f);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Round(float value, float n)
         {
-            return (float)Math.Round(value / n) * n;
+            return (float)System.Math.Round(value / n) * n;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int RoundToInt(float f)
         {
-            return (int)Math.Round(f);
+            return (int)System.Math.Round(f);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -259,8 +310,8 @@ namespace TaffyScript.MonoGame
         public static float Approach(float start, float end, float shift)
         {
             if (start < end)
-                return Math.Min(start + shift, end);
-            return Math.Max(start - shift, end);
+                return System.Math.Min(start + shift, end);
+            return System.Math.Max(start - shift, end);
         }
 
         /// <summary>
@@ -273,7 +324,7 @@ namespace TaffyScript.MonoGame
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float MinOf(float a, float b, float c)
         {
-            return Math.Min(a, Math.Min(b, c));
+            return System.Math.Min(a, System.Math.Min(b, c));
         }
 
 
@@ -287,7 +338,7 @@ namespace TaffyScript.MonoGame
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float MaxOf(float a, float b, float c)
         {
-            return Math.Max(a, Math.Max(b, c));
+            return System.Math.Max(a, System.Math.Max(b, c));
         }
 
 
@@ -302,7 +353,7 @@ namespace TaffyScript.MonoGame
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float MinOf(float a, float b, float c, float d)
         {
-            return Math.Min(a, Math.Min(b, Math.Min(c, d)));
+            return System.Math.Min(a, System.Math.Min(b, System.Math.Min(c, d)));
         }
 
 
@@ -317,7 +368,7 @@ namespace TaffyScript.MonoGame
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float MinOf(float a, float b, float c, float d, float e)
         {
-            return Math.Min(a, Math.Min(b, Math.Min(c, Math.Min(d, e))));
+            return System.Math.Min(a, System.Math.Min(b, System.Math.Min(c, System.Math.Min(d, e))));
         }
 
 
@@ -332,7 +383,7 @@ namespace TaffyScript.MonoGame
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float MaxOf(float a, float b, float c, float d)
         {
-            return Math.Max(a, Math.Max(b, Math.Max(c, d)));
+            return System.Math.Max(a, System.Math.Max(b, System.Math.Max(c, d)));
         }
 
 
@@ -347,7 +398,7 @@ namespace TaffyScript.MonoGame
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float MaxOf(float a, float b, float c, float d, float e)
         {
-            return Math.Max(a, Math.Max(b, Math.Max(c, Math.Max(d, e))));
+            return System.Math.Max(a, System.Math.Max(b, System.Math.Max(c, System.Math.Max(d, e))));
         }
 
         /// <summary>
@@ -357,13 +408,13 @@ namespace TaffyScript.MonoGame
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Sqrt(float val)
         {
-            return (float)Math.Sqrt(val);
+            return (float)System.Math.Sqrt(val);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Pow(float x, float y)
         {
-            return (float)Math.Pow(x, y);
+            return (float)System.Math.Pow(x, y);
         }
 
         /// <summary>
@@ -373,7 +424,7 @@ namespace TaffyScript.MonoGame
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Sin(float f)
         {
-            return (float)Math.Sin(f);
+            return (float)System.Math.Sin(f);
         }
 
         /// <summary>
@@ -383,7 +434,7 @@ namespace TaffyScript.MonoGame
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Cos(float f)
         {
-            return (float)Math.Cos(f);
+            return (float)System.Math.Cos(f);
         }
 
         /// <summary>
@@ -393,13 +444,13 @@ namespace TaffyScript.MonoGame
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Acos(float f)
         {
-            return (float)Math.Acos(f);
+            return (float)System.Math.Acos(f);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Exp(float power)
         {
-            return (float)Math.Exp(power);
+            return (float)System.Math.Exp(power);
         }
 
         /// <summary>
@@ -410,7 +461,7 @@ namespace TaffyScript.MonoGame
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float Atan2(float y, float x)
         {
-            return (float)Math.Atan2(y, x);
+            return (float)System.Math.Atan2(y, x);
         }
     }
 }

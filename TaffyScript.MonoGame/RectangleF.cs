@@ -189,26 +189,26 @@ namespace TaffyScript.MonoGame
         public Vector2 GetClosestPointOnBoundsToOrigin()
         {
             var max = Max;
-            var minDist = Math.Abs(Position.X);
+            var minDist = System.Math.Abs(Position.X);
             var boundsPoint = new Vector2(Position.X, 0);
 
-            if (Math.Abs(max.X) < minDist)
+            if (System.Math.Abs(max.X) < minDist)
             {
-                minDist = Math.Abs(max.X);
+                minDist = System.Math.Abs(max.X);
                 boundsPoint.X = max.X;
                 boundsPoint.Y = 0f;
             }
 
-            if (Math.Abs(max.Y) < minDist)
+            if (System.Math.Abs(max.Y) < minDist)
             {
-                minDist = Math.Abs(max.Y);
+                minDist = System.Math.Abs(max.Y);
                 boundsPoint.X = 0f;
                 boundsPoint.Y = max.Y;
             }
 
-            if (Math.Abs(Position.Y) < minDist)
+            if (System.Math.Abs(Position.Y) < minDist)
             {
-                minDist = Math.Abs(Position.Y);
+                minDist = System.Math.Abs(Position.Y);
                 boundsPoint.X = 0;
                 boundsPoint.Y = Position.Y;
             }
@@ -342,10 +342,10 @@ namespace TaffyScript.MonoGame
         {
             if (value1.Intersects(value2))
             {
-                var top = Math.Max(value1.Top, value2.Top);
-                var left = Math.Max(value1.Left, value2.Left);
-                var bottom = Math.Min(value1.Bottom, value2.Bottom);
-                var right = Math.Min(value1.Right, value2.Right);
+                var top = System.Math.Max(value1.Top, value2.Top);
+                var left = System.Math.Max(value1.Left, value2.Left);
+                var bottom = System.Math.Min(value1.Bottom, value2.Bottom);
+                var right = System.Math.Min(value1.Right, value2.Right);
                 intersect = new RectangleF(left, top, right - left, bottom - top);
                 return true;
             }
@@ -355,10 +355,10 @@ namespace TaffyScript.MonoGame
 
         public static RectangleF Union(RectangleF value1, RectangleF value2)
         {
-            var x = Math.Min(value1.X, value2.X);
-            var y = Math.Min(value1.Y, value2.Y);
-            var width = Math.Max(value1.Right, value2.Right) - x;
-            var height = Math.Max(value1.Bottom, value2.Bottom) - y;
+            var x = System.Math.Min(value1.X, value2.X);
+            var y = System.Math.Min(value1.Y, value2.Y);
+            var width = System.Math.Max(value1.Right, value2.Right) - x;
+            var height = System.Math.Max(value1.Bottom, value2.Bottom) - y;
             return new RectangleF(x, y, width, height);
         }
 
@@ -381,7 +381,7 @@ namespace TaffyScript.MonoGame
             var minDistanceY = halfHeightA + halfHeightB;
 
             // if we are not intersecting at all, return (0, 0)
-            if (Math.Abs(distanceX) >= minDistanceX || Math.Abs(distanceY) >= minDistanceY)
+            if (System.Math.Abs(distanceX) >= minDistanceX || System.Math.Abs(distanceY) >= minDistanceY)
                 return Vector2.Zero;
 
             // calculate and return intersection depths

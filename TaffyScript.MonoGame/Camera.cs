@@ -212,21 +212,21 @@ namespace TaffyScript.MonoGame
             switch (scriptName)
             {
                 case "move":
-                    return move(null, args);
+                    return move(args);
                 case "rotate":
-                    return rotate(null, args);
+                    return rotate(args);
                 case "zoom_in":
-                    return zoom_in(null, args);
+                    return zoom_in(args);
                 case "zoom_out":
-                    return zoom_out(null, args);
+                    return zoom_out(args);
                 case "look_at":
-                    return look_at(null, args);
+                    return look_at(args);
                 case "screen_to_world":
-                    return screen_to_world(null, args);
+                    return screen_to_world(args);
                 case "world_to_screen":
-                    return world_to_screen(null, args);
+                    return world_to_screen(args);
                 case "get_bounds":
-                    return get_bounds(null, args);
+                    return get_bounds(args);
                 default:
                     throw new MissingMethodException(ObjectType, scriptName);
             }
@@ -237,28 +237,28 @@ namespace TaffyScript.MonoGame
             switch (scriptName)
             {
                 case "move":
-                    del = new TsDelegate(move, "move", this);
+                    del = new TsDelegate(move, "move");
                     return true;
                 case "rotate":
-                    del = new TsDelegate(rotate, "rotate", this);
+                    del = new TsDelegate(rotate, "rotate");
                     return true;
                 case "zoom_in":
-                    del = new TsDelegate(zoom_in, "zoom_in", this);
+                    del = new TsDelegate(zoom_in, "zoom_in");
                     return true;
                 case "zoom_out":
-                    del = new TsDelegate(zoom_out, "zoom_out", this);
+                    del = new TsDelegate(zoom_out, "zoom_out");
                     return true;
                 case "look_at":
-                    del = new TsDelegate(look_at, "look_at", this);
+                    del = new TsDelegate(look_at, "look_at");
                     return true;
                 case "screen_to_world":
-                    del = new TsDelegate(screen_to_world, "screen_to_world", this);
+                    del = new TsDelegate(screen_to_world, "screen_to_world");
                     return true;
                 case "world_to_screen":
-                    del = new TsDelegate(world_to_screen, "world_to_screen", this);
+                    del = new TsDelegate(world_to_screen, "world_to_screen");
                     return true;
                 case "get_bounds":
-                    del = new TsDelegate(get_bounds, "get_bounds", this);
+                    del = new TsDelegate(get_bounds, "get_bounds");
                     return true;
                 default:
                     del = null;
@@ -309,7 +309,7 @@ namespace TaffyScript.MonoGame
             switch (name)
             {
                 case "origin":
-                    var array = value.GetArray1D();
+                    var array = value.GetArray();
                     Origin = new Vector2((float)array[0], (float)array[1]);
                     break;
                 case "origin_x":
@@ -319,7 +319,7 @@ namespace TaffyScript.MonoGame
                     Origin = new Vector2(Origin.X, (float)value);
                     break;
                 case "position":
-                    array = value.GetArray1D();
+                    array = value.GetArray();
                     Position = new Vector2((float)array[0], (float)array[1]);
                     break;
                 case "position_x":
@@ -345,49 +345,49 @@ namespace TaffyScript.MonoGame
             }
         }
 
-        private TsObject move(ITsInstance inst, TsObject[] args)
+        private TsObject move(TsObject[] args)
         {
             Move(new Vector2((float)args[0], (float)args[1]));
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        private TsObject rotate(ITsInstance inst, TsObject[] args)
+        private TsObject rotate(TsObject[] args)
         {
             Rotate((float)args[0]);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        private TsObject zoom_in(ITsInstance inst, TsObject[] args)
+        private TsObject zoom_in(TsObject[] args)
         {
             ZoomIn((float)args[0]);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        private TsObject zoom_out(ITsInstance inst, TsObject[] args)
+        private TsObject zoom_out(TsObject[] args)
         {
             ZoomOut((float)args[0]);
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        private TsObject look_at(ITsInstance inst, TsObject[] args)
+        private TsObject look_at(TsObject[] args)
         {
             LookAt(new Vector2((float)args[0], (float)args[1]));
-            return TsObject.Empty();
+            return TsObject.Empty;
         }
 
-        private TsObject screen_to_world(ITsInstance inst, TsObject[] args)
+        private TsObject screen_to_world(TsObject[] args)
         {
             var vec = ScreenToWorld(new Vector2((float)args[0], (float)args[1]));
             return new TsObject[] { vec.X, vec.Y };
         }
 
-        private TsObject world_to_screen(ITsInstance inst, TsObject[] args)
+        private TsObject world_to_screen(TsObject[] args)
         {
             var vec = WorldToScreen(new Vector2((float)args[0], (float)args[1]));
             return new TsObject[] { vec.X, vec.Y };
         }
 
-        private TsObject get_bounds(ITsInstance inst, TsObject[] args)
+        private TsObject get_bounds(TsObject[] args)
         {
             var bounds = BoundingRectangle;
             return new TsObject[] { bounds.X, bounds.Y, bounds.Width, bounds.Height };
@@ -395,12 +395,12 @@ namespace TaffyScript.MonoGame
 
         public static implicit operator TsObject(Camera cam)
         {
-            return new TsObject(cam);
+            return new TsInstanceWrapper(cam);
         }
 
         public static explicit operator Camera(TsObject obj)
         {
-            return (Camera)obj.Value.WeakValue;
+            return (Camera)obj.WeakValue;
         }
 
         #endregion

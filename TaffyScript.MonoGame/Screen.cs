@@ -5,12 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using Myst.Collections;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using TaffyScript.Collections;
 using TaffyScript.MonoGame.Input;
 using TaffyScript.MonoGame.Graphics;
+using TaffyScript.MonoGame.Collisions;
+using TaffyScript.Reflection;
 
 namespace TaffyScript.MonoGame
 {
-    [WeakObject]
+    [TaffyScriptObject]
     public class Screen : ITsInstance
     {
         private const int DefaultCellSize = 100;
@@ -53,7 +57,7 @@ namespace TaffyScript.MonoGame
             CollisionWorld = new SpatialHash(cellSize);
         }
 
-        public void AddInstance(GameObject inst, int depth)
+        public void AddInstance(GameObject inst, int depth, bool callScript)
         {
             if (_instances.ContainsKey(inst))
                 return;
@@ -72,11 +76,19 @@ namespace TaffyScript.MonoGame
             if (inst.TryGetDelegate("draw_gui", out var drawGui))
                 info.DrawGui = drawGui;
 
-            CollisionWorld.Add(inst);
+            if(!(inst.Collider is NullCollider))
+                CollisionWorld.Add(inst);
 
-            info.DepthChanged = (prev, current) => { RemoveInstance(inst, prev); AddInstance(inst, current); };
+            info.DepthChanged = (prev, current) => { RemoveInstance(inst, prev, false); AddInstance(inst, current, false); };
             inst.DepthChanged += info.DepthChanged;
-            info.PositionChanged = (prev, current) => { CollisionWorld.PrepForMove(inst, prev); CollisionWorld.Add(inst); };
+
+            info.PositionChanged = (prev, current) => 
+            {
+                CollisionWorld.PrepForMove(inst, prev);
+                if (!(inst.Collider is NullCollider))
+                    CollisionWorld.Add(inst);
+            };
+
             inst.PositionChanged += info.PositionChanged;
 
             _addUpdatable.Add(inst, info);
@@ -84,9 +96,22 @@ namespace TaffyScript.MonoGame
             _instances.Add(inst, info);
 
             inst.Screen = this;
+
+            if(callScript && inst.TryGetDelegate("screen_added", out var screenAdded))
+                screenAdded.Invoke();
         }
 
-        public void RemoveInstance(GameObject inst, int depth)
+        public void AddTile(Texture2D texture, Rectangle source, Vector2 position, int depth)
+        {
+            if(!_drawable.TryGetValue(depth, out var list))
+            {
+                list = new FastList<TsDelegate>();
+                _drawable.Add(depth, list);
+            }
+            list.Add(new TsDelegate((a) => { SpriteBatchManager.SpriteBatch.Draw(texture, position, source, Color.White); return TsObject.Empty; }, "draw_tile"));
+        }
+
+        public void RemoveInstance(GameObject inst, int depth, bool callScript)
         {
             if (!_instances.TryGetValue(inst, out var info))
             {
@@ -103,6 +128,9 @@ namespace TaffyScript.MonoGame
             _removeUpdatable.Add(info);
             inst.DepthChanged -= info.DepthChanged;
             inst.PositionChanged -= info.PositionChanged;
+
+            if (callScript && inst.TryGetDelegate("screen_removed", out var screenRemoved))
+                screenRemoved.Invoke();
 
             inst.Screen = null;
         }
@@ -215,9 +243,15 @@ namespace TaffyScript.MonoGame
             switch(scriptName)
             {
                 case "add":
-                    return add(null, args);
+                    return add(args);
+                case "add_tile":
+                    return add_tile(args);
+                case "find":
+                    return find(args);
+                case "find_all":
+                    return find_all(args);
                 case "remove":
-                    return remove(null, args);
+                    return remove(args);
                 default:
                     throw new MissingMethodException(ObjectType, scriptName);
             }
@@ -236,6 +270,8 @@ namespace TaffyScript.MonoGame
             {
                 case "camera":
                     return Camera;
+                case "instance_count":
+                    return _instances.Count;
                 default:
                     if (TryGetDelegate(name, out var del))
                         return del;
@@ -253,10 +289,19 @@ namespace TaffyScript.MonoGame
             switch(scriptName)
             {
                 case "add":
-                    del = new TsDelegate(add, "add", this);
+                    del = new TsDelegate(add, "add");
+                    return true;
+                case "add_tile":
+                    del = new TsDelegate(add_tile, "add_tile");
+                    return true;
+                case "find":
+                    del = new TsDelegate(find, "find");
+                    return true;
+                case "find_all":
+                    del = new TsDelegate(find_all, "find_all");
                     return true;
                 case "remove":
-                    del = new TsDelegate(remove, "remove", this);
+                    del = new TsDelegate(remove, "remove");
                     return true;
                 default:
                     del = null;
@@ -264,32 +309,53 @@ namespace TaffyScript.MonoGame
             }
         }
 
-        private TsObject add(ITsInstance inst, TsObject[] args)
+        private TsObject add(TsObject[] args)
         {
-            var go = args[0].Value.WeakValue as GameObject;
+            var go = args[0].WeakValue as GameObject;
             if (go is null)
                 throw new ArgumentException("Expected a GameObject, got " + args[0].ToString(), "argument0");
-            AddInstance(go, go.Depth);
-            return TsObject.Empty();
+            AddInstance(go, go.Depth, true);
+            return TsObject.Empty;
         }
 
-        private TsObject remove(ITsInstance inst, TsObject[] args)
+        private TsObject add_tile(TsObject[] args)
         {
-            var go = args[0].Value.WeakValue as GameObject;
+            AddTile(((TsTexture)args[0]).Source, new Rectangle((int)args[1], (int)args[2], (int)args[3], (int)args[4]), new Vector2((float)args[5], (float)args[6]), (int)args[7]);
+            return TsObject.Empty;
+        }
+
+        private TsObject remove(TsObject[] args)
+        {
+            var go = args[0].WeakValue as GameObject;
             if (go is null)
                 throw new ArgumentException("Expected a GameObject, got " + args[0].ToString(), "argument0");
-            RemoveInstance(go, go.Depth);
-            return TsObject.Empty();
+            RemoveInstance(go, go.Depth, true);
+            return TsObject.Empty;
+        }
+
+        private TsObject find(TsObject[] args)
+        {
+            var type = (string)args[0];
+            foreach (var item in _instances.Keys)
+                if (TsReflection.ObjectIs(item.ObjectType, type))
+                    return item;
+            return TsObject.Empty;
+        }
+
+        private TsObject find_all(TsObject[] args)
+        {
+            var type = (string)args[0];
+            return new TsList(_instances.Keys.Where(i => TsReflection.ObjectIs(i.ObjectType, type)).Select(i => new TsInstanceWrapper(i)));
         }
 
         public static implicit operator TsObject(Screen screen)
         {
-            return new TsObject(screen);
+            return new TsInstanceWrapper(screen);
         }
 
         public static explicit operator Screen(TsObject obj)
         {
-            return (Screen)obj.Value.WeakValue;
+            return (Screen)obj.WeakValue;
         }
     }
 }
